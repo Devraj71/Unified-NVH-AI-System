@@ -1,8 +1,22 @@
 version: '3.8'
 services:
+  db:
+    image: postgres:15
+    container_name: nvh_postgres
+    environment:
+      POSTGRES_USER: nvh_user
+      POSTGRES_PASSWORD: nvh_password
+      POSTGRES_DB: nvh_diagnostics
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
   nvh_api:
     build: .
     container_name: nvh_fastapi
+    environment:
+      - DATABASE_URL=postgresql://nvh_user:nvh_password@db:5432/nvh_diagnostics
     ports:
       - "8000:8000"
     deploy:
@@ -13,12 +27,19 @@ services:
               count: 1
               capabilities: [gpu]
     command: uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+    depends_on:
+      - db
 
   nvh_dashboard:
     build: .
     container_name: nvh_streamlit
+    environment:
+      - DATABASE_URL=postgresql://nvh_user:nvh_password@db:5432/nvh_diagnostics
     ports:
       - "8501:8501"
     command: streamlit run app.py --server.port=8501 --server.address=0.0.0.0
     depends_on:
       - nvh_api
+
+volumes:
+  postgres_data:

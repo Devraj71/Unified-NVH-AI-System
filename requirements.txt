@@ -15,3 +15,5 @@ plotly
 fpdf2
 pandas
 numpy
+sqlalchemy
+psycopg2-binary
