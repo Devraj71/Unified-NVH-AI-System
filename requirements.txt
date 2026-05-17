@@ -1,0 +1,17 @@
+torch
+torchaudio
+scipy
+librosa
+PyWavelets
+tsfresh
+scikit-learn
+xgboost
+fastapi
+uvicorn
+streamlit
+matplotlib
+seaborn
+plotly
+fpdf2
+pandas
+numpy
